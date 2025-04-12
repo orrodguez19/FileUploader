@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Uguu.se File Uploader</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#4361ee;
+  --success:#4cc9f0;
+  --danger:#f72585;
+  --warning:#f8961e;
+  --dark:#212529;
+  --light:#f8f9fa
+}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif
+}
+body{
+  background-color:#f5f7fa;
+  color:var(--dark);
+  line-height:1.6;
+  padding:20px
+}
+.container{
+  max-width:800px;
+  margin:0 auto;
+  background:white;
+  border-radius:10px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.1);
+  overflow:hidden
+}
+.header{
+  background:linear-gradient(135deg,var(--primary),#3a0ca3);
+  color:white;
+  padding:25px;
+  text-align:center
+}
+.title{
+  font-size:28px;
+  font-weight:700;
+  margin-bottom:5px
+}
+.subtitle{
+  font-size:16px;
+  opacity:0.9
+}
+.tab-container{
+  display:flex;
+  border-bottom:1px solid #e9ecef
+}
+.tab-btn{
+  padding:15px 25px;
+  background:none;
+  border:none;
+  font-weight:600;
+  color:#6c757d;
+  cursor:pointer;
+  transition:all 0.3s
+}
+.tab-btn.active{
+  color:var(--primary);
+  border-bottom:3px solid var(--primary)
+}
+.tab-content{
+  padding:25px;
+  display:none
+}
+.tab-content.active{
+  display:block
+}
+.btn{
+  padding:12px 24px;
+  border-radius:6px;
+  font-weight:600;
+  cursor:pointer;
+  border:none;
+  transition:all 0.3s;
+  display:inline-block;
+  margin:5px 0
+}
+.btn-primary{
+  background-color:var(--primary);
+  color:white
+}
+.btn-success{
+  background-color:var(--success);
+  color:white
+}
+.btn-danger{
+  background-color:var(--danger);
+  color:white
+}
+.file-info{
+  background:#f8f9fa;
+  padding:20px;
+  border-radius:8px;
+  margin-bottom:20px
+}
+.progress-container{
+  width:100%;
+  background:#e9ecef;
+  border-radius:6px;
+  margin:20px 0;
+  overflow:hidden
+}
+.progress-bar{
+  height:30px;
+  background:linear-gradient(90deg,var(--primary),var(--success));
+  width:0;
+  transition:width 0.3s;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:600
+}
+.result-box{
+  background:#f8f9fa;
+  padding:20px;
+  border-radius:8px;
+  margin-top:20px
+}
+.link{
+  color:var(--primary);
+  text-decoration:none;
+  font-weight:600
+}
+.hidden{
+  display:none
+}
+@media (max-width:600px){
+  .container{
+    border-radius:0
+  }
+  .tab-btn{
+    padding:12px 15px;
+    font-size:14px
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1 class="title">Uguu.se File Uploader</h1>
+    <p class="subtitle">Sube archivos temporalmente sin registro</p>
+  </div>
+  
+  <div class="tab-container">
+    <button class="tab-btn active" onclick="openTab('upload-tab')">Subir</button>
+    <button class="tab-btn" onclick="openTab('logs-tab')">Historial</button>
+  </div>
+  
+  <div id="upload-tab" class="tab-content active">
+    <div class="file-info">
+      <input type="file" id="file-input" class="hidden">
+      <button id="select-btn" class="btn btn-primary">Seleccionar Archivo</button>
+      <span id="file-name">Ningún archivo seleccionado</span>
+    </div>
+    
+    <div id="progress-section" class="hidden">
+      <div class="progress-container">
+        <div id="progress-bar" class="progress-bar">0%</div>
+      </div>
+    </div>
+    
+    <div id="result-section" class="hidden">
+      <div id="result-box" class="result-box">
+        <a id="download-link" class="link" target="_blank"></a>
+        <button id="copy-btn" class="btn btn-success">Copiar Enlace</button>
+      </div>
+    </div>
+  </div>
+  
+  <div id="logs-tab" class="tab-content">
+    <div id="logs-list">No hay registros</div>
+  </div>
+</div>
+
+<script>
+function openTab(tabId){
+  document.querySelectorAll('.tab-content').forEach(tab=>{
+    tab.classList.remove('active')
+  })
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.classList.remove('active')
+  })
+  document.getElementById(tabId).classList.add('active')
+  event.currentTarget.classList.add('active')
+}
+
+document.getElementById('select-btn').addEventListener('click',()=>{
+  document.getElementById('file-input').click()
+})
+
+document.getElementById('file-input').addEventListener('change',function(e){
+  if(this.files[0]){
+    document.getElementById('file-name').textContent=this.files[0].name
+    startUpload(this.files[0])
+  }
+})
+
+function startUpload(file){
+  document.getElementById('progress-section').classList.remove('hidden')
+  const formData=new FormData()
+  formData.append('files[]',file)
+  
+  const xhr=new XMLHttpRequest()
+  xhr.upload.addEventListener('progress',function(e){
+    if(e.lengthComputable){
+      const percent=Math.round((e.loaded/e.total)*100)
+      document.getElementById('progress-bar').style.width=percent+'%'
+      document.getElementById('progress-bar').textContent=percent+'%'
+    }
+  })
+  
+  xhr.onreadystatechange=function(){
+    if(xhr.readyState===4){
+      document.getElementById('progress-section').classList.add('hidden')
+      document.getElementById('result-section').classList.remove('hidden')
+      
+      if(xhr.status===200){
+        const response=JSON.parse(xhr.responseText)
+        if(response.files&&response.files[0]){
+          document.getElementById('download-link').href=response.files[0].url
+          document.getElementById('download-link').textContent=response.files[0].url
+        }
+      }
+    }
+  }
+  
+  xhr.open('POST','https://uguu.se/upload',true)
+  xhr.send(formData)
+}
+
+document.getElementById('copy-btn').addEventListener('click',function(){
+  const link=document.getElementById('download-link').href
+  navigator.clipboard.writeText(link).then(()=>{
+    alert('Enlace copiado!')
+  })
+})
+</script>
+</body>
+</html>
