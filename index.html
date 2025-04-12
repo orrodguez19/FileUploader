@@ -1,249 +1,755 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Uguu.se File Uploader</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --primary:#4361ee;
-  --success:#4cc9f0;
-  --danger:#f72585;
-  --warning:#f8961e;
-  --dark:#212529;
-  --light:#f8f9fa
-}
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:'Poppins',sans-serif
-}
-body{
-  background-color:#f5f7fa;
-  color:var(--dark);
-  line-height:1.6;
-  padding:20px
-}
-.container{
-  max-width:800px;
-  margin:0 auto;
-  background:white;
-  border-radius:10px;
-  box-shadow:0 4px 20px rgba(0,0,0,0.1);
-  overflow:hidden
-}
-.header{
-  background:linear-gradient(135deg,var(--primary),#3a0ca3);
-  color:white;
-  padding:25px;
-  text-align:center
-}
-.title{
-  font-size:28px;
-  font-weight:700;
-  margin-bottom:5px
-}
-.subtitle{
-  font-size:16px;
-  opacity:0.9
-}
-.tab-container{
-  display:flex;
-  border-bottom:1px solid #e9ecef
-}
-.tab-btn{
-  padding:15px 25px;
-  background:none;
-  border:none;
-  font-weight:600;
-  color:#6c757d;
-  cursor:pointer;
-  transition:all 0.3s
-}
-.tab-btn.active{
-  color:var(--primary);
-  border-bottom:3px solid var(--primary)
-}
-.tab-content{
-  padding:25px;
-  display:none
-}
-.tab-content.active{
-  display:block
-}
-.btn{
-  padding:12px 24px;
-  border-radius:6px;
-  font-weight:600;
-  cursor:pointer;
-  border:none;
-  transition:all 0.3s;
-  display:inline-block;
-  margin:5px 0
-}
-.btn-primary{
-  background-color:var(--primary);
-  color:white
-}
-.btn-success{
-  background-color:var(--success);
-  color:white
-}
-.btn-danger{
-  background-color:var(--danger);
-  color:white
-}
-.file-info{
-  background:#f8f9fa;
-  padding:20px;
-  border-radius:8px;
-  margin-bottom:20px
-}
-.progress-container{
-  width:100%;
-  background:#e9ecef;
-  border-radius:6px;
-  margin:20px 0;
-  overflow:hidden
-}
-.progress-bar{
-  height:30px;
-  background:linear-gradient(90deg,var(--primary),var(--success));
-  width:0;
-  transition:width 0.3s;
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:600
-}
-.result-box{
-  background:#f8f9fa;
-  padding:20px;
-  border-radius:8px;
-  margin-top:20px
-}
-.link{
-  color:var(--primary);
-  text-decoration:none;
-  font-weight:600
-}
-.hidden{
-  display:none
-}
-@media (max-width:600px){
-  .container{
-    border-radius:0
-  }
-  .tab-btn{
-    padding:12px 15px;
-    font-size:14px
-  }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sube archivos temporalmente a Uguu.se sin registro. Rápido, seguro y fácil de usar.">
+    <meta name="keywords" content="file upload, uguu, temporary file hosting, free file sharing">
+    <meta name="author" content="xAI Enhanced Uguu Uploader">
+    <title>Uguu.se - Subida de Archivos Temporal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #6b7280;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #111827;
+            --light: #f9fafb;
+            --shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --border: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to bottom, #f3f4f6, #e5e7eb);
+            color: var(--dark);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin: 2rem 1rem;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), #7c3aed);
+            color: white;
+            padding: 2.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+        }
+
+        .title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            opacity: 0.9;
+        }
+
+        .tab-container {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            background: #fff;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1rem;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            background: #f9fafb;
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .tab-btn.active::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .tab-content {
+            padding: 2rem;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .file-info {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            border: 2px dashed var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .file-info.drag-over {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+        }
+
+        .file-name {
+            font-size: 0.875rem;
+            color: var(--secondary);
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .progress-container {
+            width: 100%;
+            background: #e5e7eb;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 2rem;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            width: 0;
+            transition: width 0.3s ease;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .result-box {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-top: 1.5rem;
+            border-left: 4px solid var(--success);
+        }
+
+        .link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 1rem;
+            word-break: break-all;
+            padding: 0.75rem;
+            background: rgba(79, 70, 229, 0.05);
+            border-radius: 0.25rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        .link:hover {
+            text-decoration: underline;
+            background: rgba(79, 70, 229, 0.1);
+        }
+
+        .error-message {
+            background: #fef2f2;
+            color: var(--danger);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: none;
+            font-size: 0.875rem;
+            border-left: 4px solid var(--danger);
+        }
+
+        .logs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .logs-table th,
+        .logs-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logs-table th {
+            background: var(--light);
+            font-weight: 600;
+            color: var(--dark);
+            position: sticky;
+            top: 0;
+        }
+
+        .logs-table tr:hover {
+            background: #f9fafb;
+        }
+
+        .logs-table .link {
+            font-size: 0.875rem;
+            margin: 0;
+            padding: 0;
+            background: none;
+            border: none;
+        }
+
+        .size-info {
+            font-size: 0.75rem;
+            color: var(--secondary);
+            margin-top: 0.25rem;
+        }
+
+        .file-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .drag-drop-text {
+            font-size: 0.875rem;
+            color: var(--secondary);
+            margin-top: 0.5rem;
+            text-align: center;
+            width: 100%;
+        }
+
+        .file-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: var(--light);
+            color: var(--secondary);
+        }
+
+        .status-badge.success {
+            background: #ecfdf5;
+            color: var(--success);
+        }
+
+        .status-badge.error {
+            background: #fef2f2;
+            color: var(--danger);
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                margin: 1rem;
+                border-radius: 0.5rem;
+            }
+
+            .header {
+                padding: 1.5rem;
+            }
+
+            .title {
+                font-size: 1.75rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .tab-btn {
+                padding: 0.75rem;
+                font-size: 0.875rem;
+            }
+
+            .file-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+
+            .file-name {
+                max-width: 100%;
+            }
+
+            .logs-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-  <div class="header">
-    <h1 class="title">Uguu.se File Uploader</h1>
-    <p class="subtitle">Sube archivos temporalmente sin registro</p>
-  </div>
-  
-  <div class="tab-container">
-    <button class="tab-btn active" onclick="openTab('upload-tab')">Subir</button>
-    <button class="tab-btn" onclick="openTab('logs-tab')">Historial</button>
-  </div>
-  
-  <div id="upload-tab" class="tab-content active">
-    <div class="file-info">
-      <input type="file" id="file-input" class="hidden">
-      <button id="select-btn" class="btn btn-primary">Seleccionar Archivo</button>
-      <span id="file-name">Ningún archivo seleccionado</span>
-    </div>
-    
-    <div id="progress-section" class="hidden">
-      <div class="progress-container">
-        <div id="progress-bar" class="progress-bar">0%</div>
-      </div>
-    </div>
-    
-    <div id="result-section" class="hidden">
-      <div id="result-box" class="result-box">
-        <a id="download-link" class="link" target="_blank"></a>
-        <button id="copy-btn" class="btn btn-success">Copiar Enlace</button>
-      </div>
-    </div>
-  </div>
-  
-  <div id="logs-tab" class="tab-content">
-    <div id="logs-list">No hay registros</div>
-  </div>
-</div>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Uguu.se File Uploader</h1>
+            <p class="subtitle">Sube archivos temporalmente sin registro</p>
+        </div>
 
+        <div class="tab-container">
+            <button class="tab-btn active" data-tab="upload-tab">Subir</button>
+            <button class="tab-btn" data-tab="logs-tab">Historial</button>
+        </div>
+
+        <div id="upload-tab" class="tab-content active">
+            <div id="error-message" class="error-message"></div>
+            <div class="file-info" id="drop-area">
+                <div class="file-input-wrapper">
+                    <input type="file" id="file-input" class="hidden" accept="*/*">
+                    <button id="select-btn" class="btn btn-primary">
+                        <svg class="file-icon" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/>
+                        </svg>
+                        Seleccionar Archivo
+                    </button>
+                </div>
+                <span id="file-name" class="file-name">Ningún archivo seleccionado</span>
+                <button id="upload-btn" class="btn btn-success hidden">
+                    <svg class="file-icon" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L4 9h5v6h6V9h5l-8-7zm-2 12v-2h4v2h-4z"/>
+                    </svg>
+                    Subir
+                </button>
+                <div class="file-meta">
+                    <div id="file-size" class="size-info hidden"></div>
+                    <div id="file-type" class="size-info hidden"></div>
+                </div>
+                <p class="drag-drop-text">o arrastra y suelta archivos aquí</p>
+            </div>
+
+            <div id="progress-section" class="hidden">
+                <div class="progress-container">
+                    <div id="progress-bar" class="progress-bar">0%</div>
+                </div>
+                <div class="size-info" id="upload-stats"></div>
+            </div>
+
+            <div id="result-section" class="hidden">
+                <div class="result-box">
+                    <div class="status-badge success">Subida completada</div>
+                    <a id="download-link" class="link" target="_blank" rel="noopener noreferrer"></a>
+                    <div class="file-meta">
+                        <div id="uploaded-name" class="size-info"></div>
+                        <div id="uploaded-size" class="size-info"></div>
+                    </div>
+                    <button id="copy-btn" class="btn btn-success">
+                        <svg class="file-icon" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/>
+                        </svg>
+                        Copiar Enlace
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="logs-tab" class="tab-content">
+            <div id="no-logs" class="hidden">No hay registros de subidas</div>
+            <table id="logs-table" class="logs-table hidden">
+                <thead>
+                    <tr>
+                        <th>Archivo</th>
+                        <th>Enlace</th>
+                        <th>Tamaño</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="logs-list"></tbody>
+            </table>
+        </div>
+    </div>
 <script>
-function openTab(tabId){
-  document.querySelectorAll('.tab-content').forEach(tab=>{
-    tab.classList.remove('active')
-  })
-  document.querySelectorAll('.tab-btn').forEach(btn=>{
-    btn.classList.remove('active')
-  })
-  document.getElementById(tabId).classList.add('active')
-  event.currentTarget.classList.add('active')
-}
-
-document.getElementById('select-btn').addEventListener('click',()=>{
-  document.getElementById('file-input').click()
-})
-
-document.getElementById('file-input').addEventListener('change',function(e){
-  if(this.files[0]){
-    document.getElementById('file-name').textContent=this.files[0].name
-    startUpload(this.files[0])
-  }
-})
-
-function startUpload(file){
-  document.getElementById('progress-section').classList.remove('hidden')
-  const formData=new FormData()
-  formData.append('files[]',file)
-  
-  const xhr=new XMLHttpRequest()
-  xhr.upload.addEventListener('progress',function(e){
-    if(e.lengthComputable){
-      const percent=Math.round((e.loaded/e.total)*100)
-      document.getElementById('progress-bar').style.width=percent+'%'
-      document.getElementById('progress-bar').textContent=percent+'%'
-    }
-  })
-  
-  xhr.onreadystatechange=function(){
-    if(xhr.readyState===4){
-      document.getElementById('progress-section').classList.add('hidden')
-      document.getElementById('result-section').classList.remove('hidden')
-      
-      if(xhr.status===200){
-        const response=JSON.parse(xhr.responseText)
-        if(response.files&&response.files[0]){
-          document.getElementById('download-link').href=response.files[0].url
-          document.getElementById('download-link').textContent=response.files[0].url
+document.addEventListener('DOMContentLoaded', function() {
+    const uploader = {
+        maxFileSize: 100 * 1024 * 1024, // 100MB
+        endpoint: 'https://uguu.se/upload',
+        logs: JSON.parse(localStorage.getItem('uploadLogs')) || [],
+        
+        init: function() {
+            this.cacheElements();
+            this.bindEvents();
+            this.renderLogs();
+        },
+        
+        cacheElements: function() {
+            this.elements = {
+                fileInput: document.getElementById('file-input'),
+                selectBtn: document.getElementById('select-btn'),
+                uploadBtn: document.getElementById('upload-btn'),
+                fileName: document.getElementById('file-name'),
+                fileSize: document.getElementById('file-size'),
+                progressSection: document.getElementById('progress-section'),
+                progressBar: document.getElementById('progress-bar'),
+                resultSection: document.getElementById('result-section'),
+                downloadLink: document.getElementById('download-link'),
+                copyBtn: document.getElementById('copy-btn'),
+                errorMessage: document.getElementById('error-message'),
+                logsTable: document.getElementById('logs-table'),
+                logsList: document.getElementById('logs-list'),
+                noLogs: document.getElementById('no-logs'),
+                tabBtns: document.querySelectorAll('.tab-btn'),
+                tabContents: document.querySelectorAll('.tab-content'),
+                dropArea: document.getElementById('drop-area')
+            };
+        },
+        
+        bindEvents: function() {
+            // Selección de archivos
+            this.elements.selectBtn.addEventListener('click', () => this.elements.fileInput.click());
+            this.elements.fileInput.addEventListener('change', (e) => this.handleFileSelect(e.target.files[0]));
+            
+            // Subida de archivos
+            this.elements.uploadBtn.addEventListener('click', () => this.startUpload());
+            
+            // Copiar enlace
+            this.elements.copyBtn.addEventListener('click', () => this.copyToClipboard());
+            
+            // Pestañas
+            this.elements.tabBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const tabId = e.target.getAttribute('data-tab');
+                    this.switchTab(tabId);
+                });
+            });
+            
+            // Drag and drop
+            this.elements.dropArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                this.elements.dropArea.classList.add('drag-over');
+            });
+            
+            this.elements.dropArea.addEventListener('dragleave', () => {
+                this.elements.dropArea.classList.remove('drag-over');
+            });
+            
+            this.elements.dropArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                this.elements.dropArea.classList.remove('drag-over');
+                if (e.dataTransfer.files.length) {
+                    this.elements.fileInput.files = e.dataTransfer.files;
+                    this.handleFileSelect(e.dataTransfer.files[0]);
+                }
+            });
+        },
+        
+        // Funciones de utilidad
+        formatFileSize: function(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        },
+        
+        showError: function(message) {
+            this.elements.errorMessage.textContent = message;
+            this.elements.errorMessage.style.display = 'block';
+            setTimeout(() => {
+                this.elements.errorMessage.style.display = 'none';
+            }, 5000);
+        },
+        
+        // Manejo de archivos
+        handleFileSelect: function(file) {
+            if (!file) {
+                this.resetFileInput();
+                return;
+            }
+            
+            if (file.size > this.maxFileSize) {
+                this.showError('El archivo es demasiado grande (máximo 100MB)');
+                this.resetFileInput();
+                return;
+            }
+            
+            this.selectedFile = file;
+            this.elements.fileName.textContent = file.name;
+            this.elements.fileSize.textContent = 'Tamaño: ' + this.formatFileSize(file.size);
+            this.elements.fileSize.classList.remove('hidden');
+            this.elements.uploadBtn.classList.remove('hidden');
+        },
+        
+        resetFileInput: function() {
+            this.elements.fileInput.value = '';
+            this.elements.fileName.textContent = 'Ningún archivo seleccionado';
+            this.elements.fileSize.classList.add('hidden');
+            this.elements.uploadBtn.classList.add('hidden');
+            this.selectedFile = null;
+        },
+        
+        // Subida de archivos
+        startUpload: function() {
+            if (!this.selectedFile) {
+                this.showError('Por favor selecciona un archivo');
+                return;
+            }
+            
+            this.elements.progressSection.classList.remove('hidden');
+            this.elements.uploadBtn.disabled = true;
+            
+            const formData = new FormData();
+            formData.append('files[]', this.selectedFile);
+            formData.append('name', this.selectedFile.name);
+            
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', this.endpoint, true);
+            
+            xhr.upload.onprogress = (e) => {
+                if (e.lengthComputable) {
+                    const percent = Math.round((e.loaded / e.total) * 100);
+                    this.elements.progressBar.style.width = percent + '%';
+                    this.elements.progressBar.textContent = percent + '%';
+                }
+            };
+            
+            xhr.onload = () => {
+                this.elements.progressSection.classList.add('hidden');
+                this.elements.uploadBtn.disabled = false;
+                
+                if (xhr.status === 200) {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.files && response.files[0]) {
+                            this.handleUploadSuccess(response.files[0].url);
+                        } else {
+                            this.showError('Respuesta inesperada del servidor');
+                        }
+                    } catch (e) {
+                        this.showError('Error al procesar la respuesta');
+                    }
+                } else {
+                    this.showError('Error del servidor: ' + xhr.status);
+                }
+            };
+            
+            xhr.onerror = () => {
+                this.showError('Error de conexión. Verifica tu conexión a internet.');
+                this.elements.progressSection.classList.add('hidden');
+                this.elements.uploadBtn.disabled = false;
+            };
+            
+            xhr.send(formData);
+        },
+        
+        handleUploadSuccess: function(url) {
+            this.elements.downloadLink.href = url;
+            this.elements.downloadLink.textContent = url;
+            this.elements.resultSection.classList.remove('hidden');
+            
+            // Agregar al historial
+            this.logs.unshift({
+                name: this.selectedFile.name,
+                url: url,
+                size: this.selectedFile.size,
+                date: new Date().toLocaleString('es-ES')
+            });
+            
+            localStorage.setItem('uploadLogs', JSON.stringify(this.logs));
+            this.renderLogs();
+            this.resetFileInput();
+        },
+        
+        // Manejo de pestañas
+        switchTab: function(tabId) {
+            // Ocultar todos los contenidos
+            this.elements.tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Desactivar todas las pestañas
+            this.elements.tabBtns.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Mostrar contenido seleccionado
+            document.getElementById(tabId).classList.add('active');
+            
+            // Activar pestaña seleccionada
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+        },
+        
+        // Historial
+        renderLogs: function() {
+            if (this.logs.length === 0) {
+                this.elements.noLogs.classList.remove('hidden');
+                this.elements.logsTable.classList.add('hidden');
+                return;
+            }
+            
+            this.elements.noLogs.classList.add('hidden');
+            this.elements.logsTable.classList.remove('hidden');
+            
+            this.elements.logsList.innerHTML = this.logs.map((log, index) => `
+                <tr>
+                    <td>${log.name}</td>
+                    <td><a href="${log.url}" target="_blank" class="link">${log.url}</a></td>
+                    <td>${this.formatFileSize(log.size)}</td>
+                    <td>${log.date}</td>
+                    <td>
+                        <button class="btn btn-primary copy-log" data-url="${log.url}">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/>
+                            </svg>
+                        </button>
+                        <button class="btn btn-danger delete-log" data-index="${index}">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+            
+            // Eventos para los botones del historial
+            document.querySelectorAll('.delete-log').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = e.target.closest('.delete-log').getAttribute('data-index');
+                    this.deleteLog(index);
+                });
+            });
+            
+            document.querySelectorAll('.copy-log').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const url = e.target.closest('.copy-log').getAttribute('data-url');
+                    this.copyToClipboard(url, e.target);
+                });
+            });
+        },
+        
+        deleteLog: function(index) {
+            if (confirm('¿Eliminar este registro del historial?')) {
+                this.logs.splice(index, 1);
+                localStorage.setItem('uploadLogs', JSON.stringify(this.logs));
+                this.renderLogs();
+            }
+        },
+        
+        copyToClipboard: function(text, button) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5L4 14l5 5 10-10-1.4-1.4L9 16.2z"/></svg>';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                }, 2000);
+            }).catch(err => {
+                this.showError('Error al copiar: ' + err);
+            });
         }
-      }
-    }
-  }
-  
-  xhr.open('POST','https://uguu.se/upload',true)
-  xhr.send(formData)
-}
-
-document.getElementById('copy-btn').addEventListener('click',function(){
-  const link=document.getElementById('download-link').href
-  navigator.clipboard.writeText(link).then(()=>{
-    alert('Enlace copiado!')
-  })
-})
+    };
+    
+    // Inicializar
+    uploader.init();
+});
 </script>
 </body>
-</html>
+</html
